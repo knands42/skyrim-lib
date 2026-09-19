@@ -1,0 +1,86 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "cmake-dev",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        }
+      },
+      "warnings": {
+        "dev": true,
+        "deprecated": true
+      },
+      "errors": {
+        "deprecated": true
+      }
+    },
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "STRING",
+          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        }
+      }
+    },
+    {
+      "name": "windows-clang",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": {
+          "type": "STRING",
+          "value": "clang-cl"
+        },
+        "CMAKE_CXX_COMPILER": {
+          "type": "STRING",
+          "value": "clang-cl"
+        },
+        "CMAKE_MSVC_RUNTIME_LIBRARY": {
+          "type": "STRING",
+          "value": "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
+        },
+        "VCPKG_TARGET_TRIPLET": {
+          "type": "STRING",
+          "value": "x64-windows-static-md"
+        }
+      }
+    },
+    {
+      "name": "ninja-windows",
+      "displayName": "Ninja Multi-Config / clang-cl / Windows x64",
+      "generator": "Ninja Multi-Config",
+      "inherits": [
+        "cmake-dev",
+        "vcpkg",
+        "windows-clang"
+      ],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "/permissive /EHsc -Wall -Wextra -Wno-c99-extensions",
+        "BUILD_TESTS": {
+          "type": "BOOL",
+          "value": "OFF"
+        }
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ninja-windows-debug",
+      "displayName": "Debug",
+      "configurePreset": "ninja-windows",
+      "configuration": "Debug"
+    },
+    {
+      "name": "ninja-windows-release",
+      "displayName": "Release",
+      "configurePreset": "ninja-windows",
+      "configuration": "Release"
+    }
+  ]
+}
