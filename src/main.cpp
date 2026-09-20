@@ -1,3 +1,4 @@
+#include "SKSE/API.h"
 namespace
 {
 	void InitializeLog()
