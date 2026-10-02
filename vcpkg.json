@@ -5,6 +5,7 @@
     "boost-stl-interfaces",
     "rapidcsv",
     "rsm-binary-io",
-    "spdlog"
+    "spdlog",
+    "directxtk"
   ]
 }
