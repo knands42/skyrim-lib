@@ -1,3 +1,3 @@
-[submodule "external/CommonLibSSE"]
+[submodule "lib/CommonLibSSE"]
 	path = external/CommonLibSSE
 	url = https://github.com/alandtse/CommonLibSSE-NG.git
