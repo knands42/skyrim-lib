@@ -30,7 +30,8 @@ namespace
 	}
 }
 
-extern "C" DLLEXPORT constinit SKSE::PluginVersionData SKSEPlugin_Version = []() consteval {
+
+SKSE_PLUGIN_VERSION = []() {
 	SKSE::PluginVersionData v;
 
 	v.PluginVersion(Plugin::VERSION);
@@ -42,7 +43,7 @@ extern "C" DLLEXPORT constinit SKSE::PluginVersionData SKSEPlugin_Version = []()
 	return v;
 }();
 
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* a_skse)
 {
 	InitializeLog();
 	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());
