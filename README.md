@@ -12,6 +12,7 @@ scoop install cmake
 scoop install llvm
 scoop install ninja
 scoop install vcpkg
+scoop install just
 ```
 
 ### Set environment variables
