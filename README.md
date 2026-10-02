@@ -19,9 +19,11 @@ scoop install vcpkg
 
 ### Set environment variables
 
+Overwrite these environment values based on your own path locations...
 ```ps1
 [System.Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:/path/to/vcpkg", "User")
 [System.Environment]::SetEnvironmentVariable("CMAKE_MAKE_PROGRAM", $(where.exe ninja), "User")
+[System.Environment]::SetEnvironmentVariable("PAPYRUS_COMPILER", "C:\Steam\steamapps\common\Skyrim Special Edition\Papyrus Compiler", "User")
 ```
 
 > Open a fresh terminal after setting these so they are picked up.
