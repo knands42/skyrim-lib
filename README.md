@@ -7,9 +7,6 @@ This is a basic plugin template for use with CommonLibSSE-NG
 * [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
 	* Desktop development with C++ workload (provides Windows SDK, MSVC headers and CRT — required even when using clang-cl)
 
-* [The Elder Scrolls V: Skyrim Special Edition](https://store.steampowered.com/app/489830)
-	* Add the environment variable `Skyrim64Path` to point to the root installation of your game directory (the one containing `SkyrimSE.exe`).
-
 ```ps1
 scoop install cmake
 scoop install llvm
@@ -24,6 +21,8 @@ Overwrite these environment values based on your own path locations...
 [System.Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:/path/to/vcpkg", "User")
 [System.Environment]::SetEnvironmentVariable("CMAKE_MAKE_PROGRAM", $(where.exe ninja), "User")
 [System.Environment]::SetEnvironmentVariable("PAPYRUS_COMPILER", "C:\Steam\steamapps\common\Skyrim Special Edition\Papyrus Compiler", "User")
+[System.Environment]::SetEnvironmentVariable("SKYRIM_SCRIPTS", "C:\Steam\steamapps\common\Skyrim Special Edition\Data\Source\Scripts", "User")
+[System.Environment]::SetEnvironmentVariable("SkyrimSE_PATH", "C:\Steam\steamapps\common\Skyrim Special Edition", "User")
 ```
 
 > Open a fresh terminal after setting these so they are picked up.
