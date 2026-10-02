@@ -30,14 +30,14 @@ namespace
 	}
 }
 
-extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []() {
+extern "C" DLLEXPORT constinit SKSE::PluginVersionData SKSEPlugin_Version = []() consteval {
 	SKSE::PluginVersionData v;
 
 	v.PluginVersion(Plugin::VERSION);
 	v.PluginName(Plugin::NAME);
 
-	v.UsesAddressLibrary(true);
-	v.HasNoStructUse();
+	v.UsesAddressLibrary();
+	v.UsesNoStructs();
 
 	return v;
 }();
