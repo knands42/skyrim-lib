@@ -1,4 +1,4 @@
-This is a basic plugin template for use with CommonLibSSE-NG
+This is a basic plugin template to use with CommonLibSSE-NG
 
 ## Requirements
 
