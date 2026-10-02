@@ -17,6 +17,26 @@ macro(set_from_environment VARIABLE)
 	endif()
 endmacro()
 
+set_from_environment(VCPKG_ROOT)
+if(NOT DEFINED VCPKG_ROOT)
+	message(FATAL_ERROR "VCPKG_ROOT is not set")
+endif()
+
+set_from_environment(CMAKE_MAKE_PROGRAM)
+if(NOT DEFINED CMAKE_MAKE_PROGRAM)
+	message(FATAL_ERROR "CMAKE_MAKE_PROGRAM is not set")
+endif()
+
+set_from_environment(PAPYRUS_COMPILER)
+if(NOT DEFINED PAPYRUS_COMPILER)
+	message(FATAL_ERROR "PAPYRUS_COMPILER is not set")
+endif()
+
+set_from_environment(SKYRIM_SCRIPTS)
+if(NOT DEFINED SKYRIM_SCRIPTS)
+	message(FATAL_ERROR "SKYRIM_SCRIPTS is not set")
+endif()
+
 set_from_environment(SkyrimSE_PATH)
 if(NOT DEFINED SkyrimSE_PATH)
 	message(FATAL_ERROR "SkyrimSE_PATH is not set")
