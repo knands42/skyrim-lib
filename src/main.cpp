@@ -1,5 +1,7 @@
 #include "SKSE/API.h"
+#include "integrations/IntegrationChecker.h"
 #include "integrations/core/BusinessLogic.h"
+#include "papyrus/IRegister.h"
 
 namespace
 {
@@ -75,7 +77,7 @@ SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* a_skse)
 		logger::error("Could not obtain PapyrusInterface");
 		return false;
 	}
-	papyrus->Register(Heartstrings::papyrus::RegisterMCM);
+	papyrus->Register(MyPlugin::papyrus::RegisterMCM);
 
 	// Subscribe to the data-loaded message to probe integrations.
 	const auto* messaging = SKSE::GetMessagingInterface();
