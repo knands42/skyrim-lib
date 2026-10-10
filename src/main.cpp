@@ -1,4 +1,6 @@
 #include "SKSE/API.h"
+#include "integrations/core/BusinessLogic.h"
+
 namespace
 {
 	void InitializeLog()
@@ -28,9 +30,22 @@ namespace
 		spdlog::set_default_logger(std::move(log));
 		spdlog::set_pattern("%g(%#): [%^%l%$] %v"s);
 	}
+
+	// -------------------------------------------------------------------------
+	// SKSE message listener
+	// Fires once all plugins and game data are fully loaded.
+	// -------------------------------------------------------------------------
+	void OnSKSEMessage(SKSE::MessagingInterface::Message* a_msg)
+	{
+		if (a_msg->type != SKSE::MessagingInterface::kDataLoaded)
+			return;
+
+		MyPlugin::integrations::IntegrationChecker::CheckAvailability();
+		auto availability = MyPlugin::integrations::IntegrationChecker::GetIntegrationAvailability();
+
+		MyPlugin::BusinessLogic::Init();
+	}
 }
-
-
 
 // -------------------------------------------------------------------------
 // Plugin metadata (CommonLibSSE-NG / Address Library)

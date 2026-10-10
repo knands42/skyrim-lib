@@ -5,7 +5,8 @@ set(SOURCE_FILES
 	"${SOURCE_DIR}/main.cpp"
 	"${SOURCE_DIR}/PCH.h"
 	# Core
-	"${SOURCE_DIR}/core/BusinessLogic.h"
+	"${SOURCE_DIR}/integrations/core/BusinessLogic.h"
+	"${SOURCE_DIR}/integrations/core/BusinessLogic.cpp"
 	# Integrations
 	"${SOURCE_DIR}/integrations/IIntegration.h"
 	"${SOURCE_DIR}/integrations/IntegrationChecker.h"

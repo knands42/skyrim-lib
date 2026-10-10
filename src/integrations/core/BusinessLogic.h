@@ -5,7 +5,7 @@ namespace MyPlugin
 	class BusinessLogic
 	{
 	public:
-		void Init();
+		static void Init();
 
 	};
 }
