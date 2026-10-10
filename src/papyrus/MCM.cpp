@@ -1,6 +1,4 @@
 #include "PCH.h"
-#include "papyrus/MCM.h"
-#include "core/Manager.h"
 
 namespace MyPlugin::papyrus
 {
