@@ -1,3 +1,15 @@
 [submodule "external/CommonLibSSE-NG"]
 	path = external/CommonLibSSE-NG
 	url = https://github.com/alandtse/CommonLibSSE-NG
+
+[submodule "external/SkyUI"]
+	path = external/SkyUI
+	url = https://github.com/doodlum/SkyUI-Community
+
+[submodule "external/SKSE64"]
+	path = external/SKSE64
+	url = https://github.com/ianpatt/SKSE64
+
+[submodule "external/Common"]
+	path = external/Common
+	url = https://github.com/ianpatt/common
