@@ -24,6 +24,7 @@ Overwrite these environment values based on your own path locations...
 [System.Environment]::SetEnvironmentVariable("PAPYRUS_COMPILER", "C:\Steam\steamapps\common\Skyrim Special Edition\Papyrus Compiler", "User")
 [System.Environment]::SetEnvironmentVariable("SKYRIM_SCRIPTS", "C:\Steam\steamapps\common\Skyrim Special Edition\Data\Source\Scripts", "User")
 [System.Environment]::SetEnvironmentVariable("SkyrimSE_PATH", "C:\Steam\steamapps\common\Skyrim Special Edition", "User")
+[System.Environment]::SetEnvironmentVariable("SkyrimModlist_PATH", "D:\Modlists\Skyrim\WabajackModlist", "User")
 ```
 
 > Open a fresh terminal after setting these so they are picked up.
@@ -48,16 +49,14 @@ cmake --build --preset ninja-windows-release
 
 Copy the built `.dll` to your game's SKSE plugins folder:
 
-```
-<Skyrim root>\Data\SKSE\Plugins\<YourPlugin>.dll
+```ps1
+just deploy-to-vanilla
 ```
 
-For Wabbajack / MO2 modlists using a Stock Game folder, add the DLL as a mod in MO2:
-1. Create `<modlist>\mods\<YourPlugin>\SKSE\Plugins\<YourPlugin>.dll`
-2. Enable the mod in MO2's left panel
-3. Launch the game via MO2's SKSE button
-
-Or copy directly to `<modlist>\Stock Game\Data\SKSE\Plugins\` (bypasses MO2, harder to manage).
+For Wabbajack / MO2 modlists using a Stock Game folder:
+```ps1
+just deploy-to-modlist
+```
 
 ## Logs
 
@@ -77,15 +76,13 @@ SKSE's own load log (confirms your plugin loaded):
 
 ```ps1
 # Stop all pending background cpp processes
-Stop-Process -Name ninja,cmake,clang-cl -ErrorAction SilentlyContinue
+just stop-bg-process
 
 # Build filtering only error messages
-cmake --build --preset ninja-windows-debug 2>&1 | Select-String "error:"
+just build-check-errors
 
-# Clean rebuild
-Remove-Item -Recurse -Force build
-cmake --preset ninja-windows
-cmake --build --preset ninja-windows-debug
+# Clean & rebuild
+just rebuild
 ```
 
 ## Tips
