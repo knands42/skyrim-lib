@@ -1,4 +1,4 @@
-scriptname PLUGIN_NAME extends SKI_ConfigBase hidden
+scriptname MyPlugin extends SKI_ConfigBase hidden
 
 bool function IsEnabled() global native
 
@@ -16,7 +16,7 @@ endEvent
 event OnPageReset(string page)
     if page == "General"
         SetCursorFillMode(TOP_TO_BOTTOM)
-        AddHeaderOption("PLUGIN_NAME")
+        AddHeaderOption("MyPlugin")
         ; Seed the toggle from the DLL's current state.
         oidEnabledToggle = AddToggleOption("Mod active", IsEnabled())
     endIf
@@ -26,7 +26,7 @@ event OnOptionSelect(int option)
     if option == oidEnabledToggle
         ; Skeleton: just show a notification for now.
         ; Later this will call into the DLL to enable/disable the framework.
-        Debug.Notification("PLUGIN_NAME: toggle pressed — not yet implemented")
+        Debug.Notification("MyPlugin: toggle pressed — not yet implemented")
         ; Re-read state from DLL so the checkbox stays in sync.
         SetToggleOptionValue(oidEnabledToggle, IsEnabled())
     endIf
@@ -34,6 +34,6 @@ endEvent
 
 event OnOptionHighlight(int option)
     if option == oidEnabledToggle
-        SetInfoText("Enables or disables the PLUGIN_NAME relationship framework.")
+        SetInfoText("Enables or disables the MyPlugin relationship framework.")
     endIf
 endEvent

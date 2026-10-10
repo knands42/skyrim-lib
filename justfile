@@ -1,7 +1,7 @@
 set shell := ["powershell.exe", "-NoProfile", "-Command"]
 set script-interpreter := ["powershell.exe", "-NoProfile", "-Command"]
 
-export PROJECT_NAME := "<PLUGIN_NAME>"
+export PROJECT_NAME := "MyPlugin"
 
 [script]
 setup:

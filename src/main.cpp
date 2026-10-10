@@ -31,24 +31,44 @@ namespace
 }
 
 
+
+// -------------------------------------------------------------------------
+// Plugin metadata (CommonLibSSE-NG / Address Library)
+// -------------------------------------------------------------------------
 SKSE_PLUGIN_VERSION = []() {
 	SKSE::PluginVersionData v;
-
 	v.PluginVersion(Plugin::VERSION);
 	v.PluginName(Plugin::NAME);
-
 	v.UsesAddressLibrary();
 	v.UsesNoStructs();
-
 	return v;
 }();
 
+// -------------------------------------------------------------------------
+// Entry point
+// -------------------------------------------------------------------------
 SKSE_PLUGIN_LOAD(const SKSE::LoadInterface* a_skse)
 {
 	InitializeLog();
 	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());
 
 	SKSE::Init(a_skse);
+
+	// Register Papyrus natives
+	const auto* papyrus = SKSE::GetPapyrusInterface();
+	if (!papyrus) {
+		logger::error("Could not obtain PapyrusInterface");
+		return false;
+	}
+	papyrus->Register(Heartstrings::papyrus::RegisterMCM);
+
+	// Subscribe to the data-loaded message to probe integrations.
+	const auto* messaging = SKSE::GetMessagingInterface();
+	if (!messaging) {
+		logger::error("Could not obtain MessagingInterface");
+		return false;
+	}
+	messaging->RegisterListener(OnSKSEMessage);
 
 	return true;
 }

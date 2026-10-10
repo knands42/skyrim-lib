@@ -4,6 +4,17 @@ set(SOURCE_DIR "${ROOT_DIR}/src")
 set(SOURCE_FILES
 	"${SOURCE_DIR}/main.cpp"
 	"${SOURCE_DIR}/PCH.h"
+	# Core
+	"${SOURCE_DIR}/core/BusinessLogic.h"
+	# Integrations
+	"${SOURCE_DIR}/integrations/IIntegration.h"
+	"${SOURCE_DIR}/integrations/IntegrationChecker.h"
+	"${SOURCE_DIR}/integrations/IntegrationChecker.cpp"
+	"${SOURCE_DIR}/integrations/skyui/SkyUI.h"
+	"${SOURCE_DIR}/integrations/skyui/SkyUI.cpp"
+	# Papyrus
+	"${SOURCE_DIR}/papyrus/IRegister.h"
+	"${SOURCE_DIR}/papyrus/MCM.cpp"
 )
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})

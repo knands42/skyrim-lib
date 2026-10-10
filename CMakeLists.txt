@@ -42,6 +42,11 @@ if(NOT DEFINED SkyrimSE_PATH)
 	message(FATAL_ERROR "SkyrimSE_PATH is not set")
 endif()
 
+set_from_environment(SkyrimModlist_PATH)
+if(NOT DEFINED SkyrimModlist_PATH)
+	message("SkyrimModlist_PATH is not set")
+endif()
+
 option(COPY_OUTPUT "copy the output of build operations to the game directory" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")

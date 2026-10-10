@@ -1,11 +1,17 @@
-This is a basic plugin template to use with CommonLibSSE-NG
+This is a basic plugin template to use with CommonLibSSE-NG and other common integrations.
+
+> **NOTE:** Overwrite all places that contains the string `MyPlugin` to your plugin name.
 
 ## Requirements
 
 ### Manual Steps
 
 * [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
-	* Desktop development with C++ workload (provides Windows SDK, MSVC headers and CRT — required even when using clang-cl)
+  * Desktop development with C++ workload (provides Windows SDK, MSVC headers and CRT — required even when using clang-cl)
+* [just](https://just.systems/man/en/installation.html)
+  * A build tool, combines well with CMake but it's more easy to interact with, specially with tools outside the build system (like papyrus)
+* [scoop](https://scoop.sh/)
+    * A package manager for windows
 
 ```ps1
 scoop install cmake
@@ -17,7 +23,7 @@ scoop install just
 
 ### Set environment variables
 
-Overwrite these environment values based on your own path locations...
+Overwrite the environment values below based on your own path locations. You can do it on the UI search for `Edit environment variables for your account` or directly on the powershell.
 ```ps1
 [System.Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:/path/to/vcpkg", "User")
 [System.Environment]::SetEnvironmentVariable("CMAKE_MAKE_PROGRAM", $(where.exe ninja), "User")
@@ -27,7 +33,9 @@ Overwrite these environment values based on your own path locations...
 [System.Environment]::SetEnvironmentVariable("SkyrimModlist_PATH", "D:\Modlists\Skyrim\WabajackModlist", "User")
 ```
 
-> Open a fresh terminal after setting these so they are picked up.
+> **Note:** Try opening a new powershell session to run the next commands
+> 
+> CMake will make sure to capture these variables and re-export them in two different format (\$VARIABLE and \$env:VARIABLE), but if fails try rebooting the machine.
 
 ## Building
 
