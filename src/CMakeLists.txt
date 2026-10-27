@@ -20,6 +20,9 @@ set(SOURCE_FILES
 
 source_group(TREE "${ROOT_DIR}" FILES ${SOURCE_FILES})
 
+# ---------------------------------------------------------------------------
+# Generated version header
+# ---------------------------------------------------------------------------
 set(VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/Plugin.h")
 configure_file(
 	"${ROOT_DIR}/cmake/Plugin.h.in"
@@ -35,6 +38,63 @@ configure_file(
 	@ONLY
 )
 
+# ---------------------------------------------------------------------------
+# Papyrus compilation
+# ---------------------------------------------------------------------------
+set(PAPYRUS_OUTPUT_DIR "${CMAKE_BINARY_DIR}/papyrus")
+set(PAPYRUS_OUTPUT "${PAPYRUS_OUTPUT_DIR}/${PROJECT_NAME}.pex")
+set(SKSE_SCRIPTS_DIR "${ROOT_DIR}/external/SKSE64/scripts")
+set(SKYUI_SCRIPTS_DIR "${ROOT_DIR}/external/SkyUI/source/scripts")
+
+# Step 1: Merge SKSE vanilla + modified scripts into a merged directory
+set(PAPYRUS_MERGE_SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/merge_skse_scripts.ps1")
+configure_file(
+    "${ROOT_DIR}/cmake/merge_skse_scripts.ps1.in"
+    "${PAPYRUS_MERGE_SCRIPT}"
+    @ONLY
+)
+
+add_custom_command(
+    OUTPUT "${SKSE_SCRIPTS_DIR}/merged/.merged"
+    COMMAND powershell.exe -NoProfile -ExecutionPolicy Bypass -File "${PAPYRUS_MERGE_SCRIPT}"
+    COMMAND "${CMAKE_COMMAND}" -E touch "${SKSE_SCRIPTS_DIR}/merged/.merged"
+    COMMENT "-- Merging SKSE scripts"
+    VERBATIM
+)
+
+# Step 2: Compile Papyrus
+set(PAPYRUS_INCLUDE_PATHS
+    "${SKSE_SCRIPTS_DIR}/merged"
+    "${SKYRIM_SCRIPTS}"
+    "${SKYUI_SCRIPTS_DIR}"
+    "${SOURCE_DIR}/papyrus"
+)
+list(JOIN PAPYRUS_INCLUDE_PATHS ";" PAPYRUS_INCLUDES_JOINED)
+
+add_custom_command(
+    OUTPUT "${PAPYRUS_OUTPUT}"
+    DEPENDS "${SKSE_SCRIPTS_DIR}/merged/.merged"
+            "${SOURCE_DIR}/papyrus/${PROJECT_NAME}.psc"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${PAPYRUS_OUTPUT_DIR}"
+    COMMAND "${PAPYRUS_COMPILER}"
+        "${SOURCE_DIR}/papyrus/${PROJECT_NAME}.psc"
+        "-f=${SKYRIM_SCRIPTS}/TESV_Papyrus_Flags.flg"
+        "-i=${PAPYRUS_INCLUDES_JOINED}"
+        "-o=${PAPYRUS_OUTPUT_DIR}"
+        "-op"
+    COMMENT "-- Compiling Papyrus"
+    VERBATIM
+)
+
+add_custom_target(
+    "${PROJECT_NAME}_Papyrus"
+    ALL
+    DEPENDS "${PAPYRUS_OUTPUT}"
+)
+
+# ---------------------------------------------------------------------------
+# DLL target
+# ---------------------------------------------------------------------------
 add_library(
 	"${PROJECT_NAME}"
 	SHARED
@@ -97,26 +157,83 @@ target_precompile_headers(
 		"${SOURCE_DIR}/PCH.h"
 )
 
+add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_Papyrus")
+
+# ---------------------------------------------------------------------------
+# Install: DLL + ESP + PEX
+# ---------------------------------------------------------------------------
 install(
-	FILES
-		"$<TARGET_FILE:${PROJECT_NAME}>"
-	DESTINATION "SKSE/Plugins"
-	COMPONENT "main"
+    FILES
+        "$<TARGET_FILE:${PROJECT_NAME}>"
+    DESTINATION "SKSE/Plugins"
+    COMPONENT "main"
 )
 
 install(
-	FILES
-		"$<TARGET_PDB_FILE:${PROJECT_NAME}>"
-	DESTINATION "/"
-	COMPONENT "pdbs"
+    FILES
+        "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
+    DESTINATION "/"
+    COMPONENT "pdbs"
 )
 
-if("${COPY_OUTPUT}")
-	add_custom_command(
-		TARGET "${PROJECT_NAME}"
-		POST_BUILD
-		COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:${PROJECT_NAME}>" "${SkyrimSE_PATH}/Data/SKSE/Plugins/"
-		COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_PDB_FILE:${PROJECT_NAME}>" "${SkyrimSE_PATH}/Data/SKSE/Plugins/"
-		VERBATIM
-	)
+if("${DEPLOY_OUTPUT}")
+    if(DEFINED SkyrimModlist_PATH)
+        set(PLUGIN_DEPLOY_DIR "${SkyrimModlist_PATH}/mods/${PROJECT_NAME}/SKSE/Plugins")
+        set(ESP_DEPLOY_DIR "${SkyrimModlist_PATH}/mods/${PROJECT_NAME}/")
+        set(PEX_DEPLOY_DIR "${SkyrimModlist_PATH}/mods/${PROJECT_NAME}/Scripts/")
+    else()
+        set(PLUGIN_DEPLOY_DIR "${SkyrimSE_PATH}/Data/SKSE/Plugins")
+        set(ESP_DEPLOY_DIR "${SkyrimSE_PATH}/Data/")
+        set(PEX_DEPLOY_DIR "${SkyrimSE_PATH}/Data/Scripts/")
+    endif()
+
+    add_custom_command(
+        TARGET "${PROJECT_NAME}"
+        POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E echo "-- Deploying"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${PLUGIN_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${ESP_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${PEX_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_FILE:${PROJECT_NAME}>"
+            "${PLUGIN_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
+            "${PLUGIN_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${ROOT_DIR}/Heartstrings.esp"
+            "${ESP_DEPLOY_DIR}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${CMAKE_BINARY_DIR}/papyrus/Heartstrings.pex"
+            "${PEX_DEPLOY_DIR}"
+        VERBATIM
+    )
+endif()
+
+if("${ZIP_MOD}")
+    set(ZIP_STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/zip_staging")
+    set(ZIP_OUTPUT "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.zip")
+
+    add_custom_command(
+        TARGET "${PROJECT_NAME}"
+        POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E echo "-- Packaging mod ZIP"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${ZIP_STAGING_DIR}/SKSE/Plugins"
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${ZIP_STAGING_DIR}/Scripts"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_FILE:${PROJECT_NAME}>"
+            "${ZIP_STAGING_DIR}/SKSE/Plugins/"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
+            "${ZIP_STAGING_DIR}/SKSE/Plugins/"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${ROOT_DIR}/Heartstrings.esp"
+            "${ZIP_STAGING_DIR}/"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${CMAKE_BINARY_DIR}/papyrus/Heartstrings.pex"
+            "${ZIP_STAGING_DIR}/Scripts/"
+        COMMAND 7z a "${ZIP_OUTPUT}" "${ZIP_STAGING_DIR}/*" -r
+        COMMAND "${CMAKE_COMMAND}" -E remove_directory "${ZIP_STAGING_DIR}"
+        VERBATIM
+    )
 endif()
