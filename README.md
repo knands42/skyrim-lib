@@ -1,13 +1,12 @@
-This is a basic plugin template to use with CommonLibSSE-NG and other common integrations.
-
-> **NOTE:** Overwrite all places that contains the string `MyPlugin` to your plugin name.
+# SkyrimLib
+A template for quick bootstrapping of new Skyrim mods 
 
 ## Requirements
 
 ### Manual Steps
 
 * [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
-  * Desktop development with C++ workload (provides Windows SDK, MSVC headers and CRT — required even when using clang-cl)
+    * Desktop development with C++ workload (provides Windows SDK, MSVC headers and CRT — required even when using clang-cl)
 * [scoop](https://scoop.sh/)
     * A package manager for windows
 
@@ -25,40 +24,40 @@ Overwrite these environment values based on your own path locations...
 ```ps1
 [System.Environment]::SetEnvironmentVariable("VCPKG_ROOT", "C:/path/to/vcpkg", "User")
 [System.Environment]::SetEnvironmentVariable("CMAKE_MAKE_PROGRAM", $(where.exe ninja), "User")
-[System.Environment]::SetEnvironmentVariable("PAPYRUS_COMPILER", "C:\Steam\steamapps\common\Skyrim Special Edition\Papyrus Compiler", "User")
+[System.Environment]::SetEnvironmentVariable("PAPYRUS_COMPILER", "C:\Steam\steamapps\common\Skyrim Special Edition\Papyrus Compiler\PapyrusCompiler.exe", "User")
 [System.Environment]::SetEnvironmentVariable("SKYRIM_SCRIPTS", "C:\Steam\steamapps\common\Skyrim Special Edition\Data\Source\Scripts", "User")
 [System.Environment]::SetEnvironmentVariable("SkyrimSE_PATH", "C:\Steam\steamapps\common\Skyrim Special Edition", "User")
+
+# Optional, only if working with a wabbajack modlist
 [System.Environment]::SetEnvironmentVariable("SkyrimModlist_PATH", "D:\Modlists\Skyrim\WabajackModlist", "User")
 ```
 
-Some of these environment variables needs also to be in your PATH, like `PAPYRUS_COMPILER`.
+> **Note:** Some of these environment variables needs also to be in your PATH, like `PAPYRUS_COMPILER`.
 
-> **Note:** Try opening a new powershell session to run the next commands.
+> **Note:** Try opening a new PowerShell session to run the next commands.
 >
 > CMake will make sure to capture these variables and re-export them in two different format (\$VARIABLE and \$env:VARIABLE).
 > 
 > If fails try **rebooting the machine**.
 
-
 ## Building
 
 ```ps1
-# Clone submodules (CommonLibSSE-NG)
-git submodule update --init --recursive
+just setup
 
 # Configure (run once, or after CMakePresets.json changes)
-cmake --preset ninja-windows
+just configure
 
 # Build Debug
-cmake --build --preset ninja-windows-debug
+just build
 
 # Build Release
-cmake --build --preset ninja-windows-release
+just release
 ```
 
 ## Deploying
 
-Copy the built `.dll` to your game's SKSE plugins folder:
+Copy the built `.dll` + `.pex` + `.esp` into your game's folder:
 
 ```ps1
 just deploy-to-vanilla
@@ -98,7 +97,8 @@ just rebuild
 
 ## Tips
 
-* Set `COPY_OUTPUT` to `ON` to automatically copy the built dll to the game directory:
-  `cmake --preset ninja-windows -DCOPY_OUTPUT=ON`
-* Build the `package` target to automatically build and zip up your dll in a ready-to-distribute format.
-* If CLion cannot find Ninja, launch CLion from a terminal that has Scoop on its PATH so it inherits the environment.
+* Set `DEPLOY_OUTPUT` to `true` to automatically copy the built dll to the game directory:
+  `cmake --preset ninja-windows -DDEPLOY_OUTPUT=ON`
+* Set `ZIP_MOD` to `true` to automatically zip into a copy and paste, mod manager ready mod format
+  `cmake --preset ninja-windows -DZIP_MOD=ON`
+* If `SkyrimModlist_PATH` is set, it will override the `SkyrimSE_PATH` environment
