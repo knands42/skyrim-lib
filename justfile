@@ -36,13 +36,7 @@ zip-mod:
     cmake --preset ninja-windows -DZIP_MOD=true
     cmake --build --preset ninja-windows-release
 
-[script]
-deploy-to-modlist:
-    cmake --preset ninja-windows -DDEPLOY_OUTPUT=true
-    cmake --build --preset ninja-windows-release
-
-[script]
-deploy-to-vanilla:
+deploy:
     cmake --preset ninja-windows -DDEPLOY_OUTPUT=true
     cmake --build --preset ninja-windows-release
 
