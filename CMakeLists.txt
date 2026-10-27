@@ -27,6 +27,16 @@ if(NOT DEFINED CMAKE_MAKE_PROGRAM)
 	message(FATAL_ERROR "CMAKE_MAKE_PROGRAM is not set")
 endif()
 
+set_from_environment(SKYRIM_SCRIPTS)
+if(NOT DEFINED SKYRIM_SCRIPTS)
+	message(FATAL_ERROR "SKYRIM_SCRIPTS is not set")
+endif()
+
+set_from_environment(SkyrimSE_PATH)
+if(NOT DEFINED SkyrimSE_PATH)
+	message(FATAL_ERROR "SkyrimSE_PATH is not set")
+endif()
+
 set_from_environment(PAPYRUS_COMPILER)
 if(NOT DEFINED PAPYRUS_COMPILER)
 	# Auto-detect from Skyrim installation
@@ -39,16 +49,6 @@ if(NOT DEFINED PAPYRUS_COMPILER)
 	else()
 		message(FATAL_ERROR "PAPYRUS_COMPILER is not set and SkyrimSE_PATH is not available for auto-detection.")
 	endif()
-endif())
-
-set_from_environment(SKYRIM_SCRIPTS)
-if(NOT DEFINED SKYRIM_SCRIPTS)
-	message(FATAL_ERROR "SKYRIM_SCRIPTS is not set")
-endif()
-
-set_from_environment(SkyrimSE_PATH)
-if(NOT DEFINED SkyrimSE_PATH)
-	message(FATAL_ERROR "SkyrimSE_PATH is not set")
 endif()
 
 set_from_environment(SkyrimModlist_PATH)
