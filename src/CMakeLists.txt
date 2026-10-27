@@ -162,9 +162,13 @@ add_dependencies("${PROJECT_NAME}" "${PROJECT_NAME}_Papyrus")
 # ---------------------------------------------------------------------------
 # Install: DLL + ESP + PEX
 # ---------------------------------------------------------------------------
+set(DLL_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+set(DLL_OUTPUT "${DLL_OUTPUT_DIR}/${PROJECT_NAME}.dll")
+
+
 install(
     FILES
-        "$<TARGET_FILE:${PROJECT_NAME}>"
+        "${DLL_OUTPUT}"
     DESTINATION "SKSE/Plugins"
     COMPONENT "main"
 )
@@ -188,7 +192,7 @@ if("${DEPLOY_OUTPUT}")
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${ESP_DEPLOY_DIR}"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${PEX_DEPLOY_DIR}"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            "$<TARGET_FILE:${PROJECT_NAME}>"
+            "${DLL_OUTPUT}"
             "${PLUGIN_DEPLOY_DIR}"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "${ROOT_DIR}/Heartstrings.esp"
@@ -211,7 +215,7 @@ if("${ZIP_MOD}")
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${ZIP_STAGING_DIR}/SKSE/Plugins"
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${ZIP_STAGING_DIR}/Scripts"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            "$<TARGET_FILE:${PROJECT_NAME}>"
+            "${DLL_OUTPUT}"
             "${ZIP_STAGING_DIR}/SKSE/Plugins/"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "${ROOT_DIR}/Heartstrings.esp"
