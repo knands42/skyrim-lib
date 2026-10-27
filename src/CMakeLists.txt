@@ -169,13 +169,6 @@ install(
     COMPONENT "main"
 )
 
-install(
-    FILES
-        "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
-    DESTINATION "/"
-    COMPONENT "pdbs"
-)
-
 if("${DEPLOY_OUTPUT}")
     if(DEFINED SkyrimModlist_PATH)
         set(PLUGIN_DEPLOY_DIR "${SkyrimModlist_PATH}/mods/${PROJECT_NAME}/SKSE/Plugins")
@@ -196,9 +189,6 @@ if("${DEPLOY_OUTPUT}")
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${PEX_DEPLOY_DIR}"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "$<TARGET_FILE:${PROJECT_NAME}>"
-            "${PLUGIN_DEPLOY_DIR}"
-        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
             "${PLUGIN_DEPLOY_DIR}"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "${ROOT_DIR}/Heartstrings.esp"
@@ -222,9 +212,6 @@ if("${ZIP_MOD}")
         COMMAND "${CMAKE_COMMAND}" -E make_directory "${ZIP_STAGING_DIR}/Scripts"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "$<TARGET_FILE:${PROJECT_NAME}>"
-            "${ZIP_STAGING_DIR}/SKSE/Plugins/"
-        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            "$<TARGET_PDB_FILE:${PROJECT_NAME}>"
             "${ZIP_STAGING_DIR}/SKSE/Plugins/"
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different
             "${ROOT_DIR}/Heartstrings.esp"
