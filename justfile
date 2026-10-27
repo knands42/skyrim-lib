@@ -76,8 +76,9 @@ deploy-to-modlist:
 deploy-to-vanilla:
     $baseGame = $env:SkyrimSE_PATH
     if (-not $baseGame) { throw "SkyrimSE_PATH is not set" }
-    New-Item -ItemType Directory -Force -Path "$baseGame\SKSE\Plugins", "$baseGame\Scripts" | Out-Null
-    Copy-Item "{{justfile_directory()}}\build\src\Release\{{PROJECT_NAME}}.dll" "$baseGame\SKSE\Plugins\" -Force
-    Copy-Item "{{justfile_directory()}}\build\papyrus\{{PROJECT_NAME}}.pex" "$baseGame\Scripts\" -Force
+    New-Item -ItemType Directory -Force -Path "$baseGame\Data\SKSE\Plugins", "$baseGame\Data\Scripts" | Out-Null
+    Copy-Item "{{justfile_directory()}}\build\src\Release\{{PROJECT_NAME}}.dll" "$baseGame\Data\SKSE\Plugins\" -Force
+    Copy-Item "{{justfile_directory()}}\build\papyrus\{{PROJECT_NAME}}.pex" "$baseGame\Data\Scripts\" -Force
     Write-Host "Deployed to $baseGame"
     Write-Host "Launch with the SKSE executable."
+
