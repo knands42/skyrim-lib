@@ -42,6 +42,7 @@ if(NOT DEFINED PAPYRUS_COMPILER)
 	# Auto-detect from Skyrim installation
 	if(DEFINED SkyrimSE_PATH)
 		set(PAPYRUS_COMPILER "${SkyrimSE_PATH}/Papyrus Compiler/PapyrusCompiler.exe")
+		set_from_environment(PAPYRUS_COMPILER)
 		if(NOT EXISTS "${PAPYRUS_COMPILER}")
 			message(FATAL_ERROR "PapyrusCompiler.exe not found at ${PAPYRUS_COMPILER}. Set PAPYRUS_COMPILER environment variable.")
 		endif()
