@@ -60,12 +60,7 @@ just release
 Copy the built `.dll` + `.pex` + `.esp` into your game's folder:
 
 ```ps1
-just deploy-to-vanilla
-```
-
-For Wabbajack / MO2 modlists using a Stock Game folder:
-```ps1
-just deploy-to-modlist
+just deploy
 ```
 
 ## Logs
