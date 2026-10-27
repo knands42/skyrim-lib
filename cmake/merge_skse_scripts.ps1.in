@@ -1,0 +1,20 @@
+$vanilla = '@SKSE_SCRIPTS_DIR@\vanilla'
+$modified = '@SKSE_SCRIPTS_DIR@\modified'
+$merged = '@SKSE_SCRIPTS_DIR@\merged'
+
+New-Item -ItemType Directory -Path $merged -Force | Out-Null
+Copy-Item "$vanilla\*" "$merged\" -Force
+
+Get-ChildItem "$modified\*.psc" | ForEach-Object {
+    $name = $_.Name
+    $mContent = Get-Content $_.FullName -Raw
+    $mFirst = ($mContent -split "`n")[0].Trim()
+    if ($mFirst -notmatch '^Scriptname') {
+        $vFile = Join-Path $merged $name
+        if (Test-Path $vFile) {
+            Add-Content $vFile "`n$mContent" -NoNewline
+        }
+    } else {
+        Copy-Item $_.FullName "$merged\" -Force
+    }
+}
